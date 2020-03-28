@@ -48,7 +48,7 @@ class ListTripsView(generics.ListCreateAPIView):
     """
     permission_classes = (permissions.IsAuthenticated,)
 
-    def list(self, request):
+    def get(self, request):
         queryset = Trip.objects.filter(user_id=request.user)
         serializer = TripsSerializer(queryset, many=True)
         return Response(serializer.data)
