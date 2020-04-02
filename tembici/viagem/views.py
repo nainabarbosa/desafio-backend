@@ -16,10 +16,11 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
 class LoginView(generics.CreateAPIView):
+    name = 'auth-login'
     """
     POST auth/login/
     """
-
+    
     permission_classes = (permissions.AllowAny,)
 
     queryset = User.objects.all()
@@ -43,18 +44,23 @@ class LoginView(generics.CreateAPIView):
 
 
 class ListTripsView(generics.ListCreateAPIView):
+    name = 'trips-list'
     """
     GET trips/
     """
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
+    queryset = Trip.objects.all()
+    serializer_class = TripsSerializer
 
-    def get(self, request):
-        queryset = Trip.objects.filter(user_id=request.user)
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        queryset = self.get_queryset()
         serializer = TripsSerializer(queryset, many=True)
         return Response(serializer.data)
 
 
 class TripUpdateView(generics.UpdateAPIView):
+    name = 'trip-update'
     """
     PUT trips/:id/
     """
