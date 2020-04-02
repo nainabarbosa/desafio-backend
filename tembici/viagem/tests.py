@@ -10,11 +10,14 @@ class BaseViewTest(APITestCase):
     client = APIClient()
 
     @staticmethod
-    def create_trip(title="", artist=""):
-        if title != "" and artist != "":
-            Trips.objects.create(title=title, artist=artist)
+    def create_trip(data_inicio, data_fim, classificacao_id, nota):
+        Trip.objects.create(
+            data_inicio=data_inicio,
+            data_fim=data_fim,
+            classificacao_id=classificacao_id,
+            nota=nota
+        )
 
-    
     def make_request(self, kind="put", **kwargs):
         """
         Make a put request to update a trip
@@ -84,11 +87,11 @@ class BaseViewTest(APITestCase):
         )
 
         # add test data
-        self.create_trip("2020-02-20T12:20:00Z", 1, 2)
-        self.create_trip("2020-02-20T12:30:00Z", 2, 3)
-        self.create_trip("2020-02-20T12:40:00Z", 3, 4)
-        self.create_trip("2020-02-20T12:50:00Z", 4, 1)
-        self.create_trip("2020-02-20T12:50:00Z", 4, 1)
+        self.create_trip("2020-02-20T12:05:00Z", "2020-02-20T12:20:00Z", 1, 2)
+        self.create_trip("2020-02-20T12:10:00Z", "2020-02-20T12:30:00Z", 2, 3)
+        self.create_trip("2020-02-20T12:15:00Z", "2020-02-20T12:40:00Z", 3, 4)
+        self.create_trip("2020-02-20T12:20:00Z", "2020-02-20T12:50:00Z", 4, 1)
+        self.create_trip("2020-02-20T12:25:00Z", "2020-02-20T12:50:00Z", 4, 1)
         self.valid_data = {'id': 5, 'category': None, 'nota': None}
 
         
@@ -116,7 +119,6 @@ class UpdateTripsTest(BaseViewTest):
         """
         This test ensures that a trip can be updated.
         """
-        self.client_cliente('test_user', 'testing')
 
         # hit the API endpoint
         response = self.make_request(
